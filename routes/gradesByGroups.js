@@ -341,7 +341,8 @@ router.get('/report', authenticate, async (req, res) => {
                 groups,
                 schoolClass: currentClassName?.name,
                 subject: currentSubject?.name,
-                workbook
+                workbook,
+                normalReport
             }));
         } catch (err) {
             res.status(500).json(getErrorResponse('Сталася помилка при отриманні звіту'));
