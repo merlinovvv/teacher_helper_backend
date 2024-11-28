@@ -312,12 +312,21 @@ router.get('/report', authenticate, async (req, res) => {
 
                         // Разделяем оценки по типам
                         const assigments = relevantRatings.filter(({ date }) => {
-                            return group.assigment_dates.some((b_date) => new Date(b_date).toISOString().split('T')[0] === new Date(date).toISOString().split('T')[0]);
+                            const dateUTC = new Date(Date.UTC(new Date(date).getUTCFullYear(), new Date(date).getUTCMonth(), new Date(date).getUTCDate()));
+                            return group.assigment_dates.some((b_date) => {
+                                const bDateUTC = new Date(Date.UTC(new Date(b_date).getUTCFullYear(), new Date(b_date).getUTCMonth(), new Date(b_date).getUTCDate()));
+                                return dateUTC.getTime() === bDateUTC.getTime();
+                            });
                         });
 
                         const controls = relevantRatings.filter(({ date }) => {
-                            return group.control_dates.some((b_date) => new Date(b_date).toISOString().split('T')[0] === new Date(date).toISOString().split('T')[0]);
+                            const dateUTC = new Date(Date.UTC(new Date(date).getUTCFullYear(), new Date(date).getUTCMonth(), new Date(date).getUTCDate()));
+                            return group.control_dates.some((b_date) => {
+                                const bDateUTC = new Date(Date.UTC(new Date(b_date).getUTCFullYear(), new Date(b_date).getUTCMonth(), new Date(b_date).getUTCDate()));
+                                return dateUTC.getTime() === bDateUTC.getTime();
+                            });
                         });
+
                         const assigmentsAvg = assigments.reduce((sum, { rating }) => sum + (Number(rating) || 0), 0) / (assigments.length || 1);
                         const controlsAvg = controls.reduce((sum, { rating }) => sum + (Number(rating) || 0), 0) / (controls.length || 1);
 
