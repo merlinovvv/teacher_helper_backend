@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || origin.startsWith('http://localhost')) {
+        if (!origin || origin.startsWith('http://localhost') || origin === 'https://teacherhelper.pp.ua' || origin === 'http://teacherhelper.pp.ua') {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
