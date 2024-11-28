@@ -312,18 +312,18 @@ router.get('/report', authenticate, async (req, res) => {
 
                         // Разделяем оценки по типам
                         const assigments = relevantRatings.filter(({ date }) => {
-                            const dateUTC = new Date(Date.UTC(new Date(date).getUTCFullYear(), new Date(date).getUTCMonth(), new Date(date).getUTCDate()));
+                            const localDate = new Date(date).toLocaleDateString('en-GB', { timeZone: 'UTC' });
                             return group.assigment_dates.some((b_date) => {
-                                const bDateUTC = new Date(Date.UTC(new Date(b_date).getUTCFullYear(), new Date(b_date).getUTCMonth(), new Date(b_date).getUTCDate()));
-                                return dateUTC.getTime() === bDateUTC.getTime();
+                                const groupDate = new Date(b_date).toLocaleDateString('en-GB', { timeZone: 'UTC' });
+                                return localDate === groupDate;
                             });
                         });
 
                         const controls = relevantRatings.filter(({ date }) => {
-                            const dateUTC = new Date(Date.UTC(new Date(date).getUTCFullYear(), new Date(date).getUTCMonth(), new Date(date).getUTCDate()));
+                            const localDate = new Date(date).toLocaleDateString('en-GB', { timeZone: 'UTC' });
                             return group.control_dates.some((b_date) => {
-                                const bDateUTC = new Date(Date.UTC(new Date(b_date).getUTCFullYear(), new Date(b_date).getUTCMonth(), new Date(b_date).getUTCDate()));
-                                return dateUTC.getTime() === bDateUTC.getTime();
+                                const groupDate = new Date(b_date).toLocaleDateString('en-GB', { timeZone: 'UTC' });
+                                return localDate === groupDate;
                             });
                         });
 
