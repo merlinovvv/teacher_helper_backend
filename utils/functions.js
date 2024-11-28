@@ -20,4 +20,13 @@ function calculateAverage(numbers) {
     return Math.round(sum / numbers.length); // Делим сумму на количество элементов
 }
 
-module.exports = {getSuccessResponse, getErrorResponse, calculateAverage}
+function ukraineDate(date) {
+    return new Date(date).toLocaleDateString('uk-UA', {
+        timeZone: 'Europe/Kiev',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+}
+
+module.exports = {getSuccessResponse, getErrorResponse, calculateAverage, ukraineDate}

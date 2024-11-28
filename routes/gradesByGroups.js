@@ -8,8 +8,7 @@ const Classes = require('../models/Classes');
 const Groups = require('../models/Groups');
 const GradesGroupsReports = require('../models/GradesGroupsReports');
 const authenticate = require('../middleware/authenticate');
-const { getSuccessResponse, getErrorResponse, calculateAverage } = require("../utils/functions");
-const { log } = require('console');
+const { getSuccessResponse, getErrorResponse, calculateAverage, ukraineDate } = require("../utils/functions");
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -290,7 +289,7 @@ router.get('/report', authenticate, async (req, res) => {
                     
                     return {
                         rating: rating,
-                        date: date ? new Date(year, month - 1, day).toLocaleDateString('uk') : ''
+                        date: date ? ukraineDate(new Date(year, month - 1, day)) : ''
                     };
                 })
             }));
@@ -306,17 +305,17 @@ router.get('/report', authenticate, async (req, res) => {
                         const relevantRatings = student.ratings.filter(({ date }) => {
                             const dateInGroup = date => {
                                 const parsedDate = date;
-                                return group.assigment_dates.some(gDate => parsedDate === new Date(gDate).toLocaleDateString('uk')) ||
-                                    group.control_dates.some(gDate => parsedDate === new Date(gDate).toLocaleDateString('uk'));
+                                return group.assigment_dates.some(gDate => parsedDate === ukraineDate(gDate)) ||
+                                    group.control_dates.some(gDate => parsedDate === ukraineDate(gDate));
                             };
                             return dateInGroup(date);
                         });
 
                         // Разделяем оценки по типам
                         const assigments = relevantRatings.filter(({ date }) => {
-                            return group.assigment_dates.some((b_date) => new Date(b_date).toLocaleDateString('uk') === date)
+                            return group.assigment_dates.some((b_date) => ukraineDate(b_date) === date)
                         });
-                        const controls = relevantRatings.filter(({ date }) => group.control_dates.some((b_date) => new Date(b_date).toLocaleDateString('uk') === date));
+                        const controls = relevantRatings.filter(({ date }) => group.control_dates.some((b_date) => ukraineDate(b_date) === date));
 
                         const assigmentsAvg = assigments.reduce((sum, { rating }) => sum + (Number(rating) || 0), 0) / (assigments.length || 1);
                         const controlsAvg = controls.reduce((sum, { rating }) => sum + (Number(rating) || 0), 0) / (controls.length || 1);
