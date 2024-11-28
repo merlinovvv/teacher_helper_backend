@@ -287,9 +287,10 @@ router.get('/report', authenticate, async (req, res) => {
                 name,
                 ratings: ratings.map(({ date, rating }) => {
                     const [day, month, year] = date.split('/').map(Number);
+                    
                     return {
                         rating: rating,
-                        date: date ? new Date(year, month - 1, day) : ''
+                        date: date ? new Date(year, month - 1, day).toLocaleDateString('uk') : ''
                     };
                 })
             }));
@@ -300,32 +301,22 @@ router.get('/report', authenticate, async (req, res) => {
                 return {
                     name: student.name,
                     groups: groups.map(group => {
+
                         // Фильтруем оценки, соответствующие датам в группе
                         const relevantRatings = student.ratings.filter(({ date }) => {
                             const dateInGroup = date => {
-                                const parsedDate = new Date(date);
-                                return group.assigment_dates.some(gDate => parsedDate.getTime() === new Date(gDate).getTime()) ||
-                                    group.control_dates.some(gDate => parsedDate.getTime() === new Date(gDate).getTime());
+                                const parsedDate = date;
+                                return group.assigment_dates.some(gDate => parsedDate === new Date(gDate).toLocaleDateString('uk')) ||
+                                    group.control_dates.some(gDate => parsedDate === new Date(gDate).toLocaleDateString('uk'));
                             };
                             return dateInGroup(date);
                         });
 
                         // Разделяем оценки по типам
                         const assigments = relevantRatings.filter(({ date }) => {
-                            const localDate = new Date(date).toLocaleDateString('en-GB', { timeZone: 'UTC' });
-                            return group.assigment_dates.some((b_date) => {
-                                const groupDate = new Date(b_date).toLocaleDateString('en-GB', { timeZone: 'UTC' });
-                                return localDate === groupDate;
-                            });
+                            return group.assigment_dates.some((b_date) => new Date(b_date).toLocaleDateString('uk') === date)
                         });
-
-                        const controls = relevantRatings.filter(({ date }) => {
-                            const localDate = new Date(date).toLocaleDateString('en-GB', { timeZone: 'UTC' });
-                            return group.control_dates.some((b_date) => {
-                                const groupDate = new Date(b_date).toLocaleDateString('en-GB', { timeZone: 'UTC' });
-                                return localDate === groupDate;
-                            });
-                        });
+                        const controls = relevantRatings.filter(({ date }) => group.control_dates.some((b_date) => new Date(b_date).toLocaleDateString('uk') === date));
 
                         const assigmentsAvg = assigments.reduce((sum, { rating }) => sum + (Number(rating) || 0), 0) / (assigments.length || 1);
                         const controlsAvg = controls.reduce((sum, { rating }) => sum + (Number(rating) || 0), 0) / (controls.length || 1);
