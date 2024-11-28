@@ -18,6 +18,7 @@ router.post('/register', async (req, res) => {
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '1h'});
         res.status(201).json(getSuccessResponse({token}, 'Ви успішно зареєструвались'));
     } catch (err) {
+        console.log(err); 
         res.status(400).json(getErrorResponse('Error registering user'));
     }
 });
