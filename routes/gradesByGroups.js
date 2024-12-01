@@ -14,7 +14,14 @@ const { getSuccessResponse, getErrorResponse, calculateAverage, ukraineDate } = 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // Указываем папку, куда будет сохранен файл
-        cb(null, 'uploads/'); // Папка 'uploads'
+        const uploadPath = path.join(__dirname, '../uploads/');
+
+        // Проверка, существует ли папка, если нет — создание
+        if (!fs.existsSync(uploadPath)) {
+            fs.mkdirSync(uploadPath, { recursive: true }); // { recursive: true } для создания вложенных папок
+        }
+
+        cb(null, uploadPath);
     },
     filename: async function (req, file, cb) {
         const { subject, schoolClass } = req.query;
