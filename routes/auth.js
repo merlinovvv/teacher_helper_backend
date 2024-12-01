@@ -192,7 +192,7 @@ router.get('/check-payment', authenticate, async (req, res) => {
         }
 
         // Ищем совпадение clientName с логином пользователя
-        const match = allDonates.find(item => item.clientName === user.username);
+        const match = allDonates.find(item => (item.clientName === user.username) && (Number(item.amount) >= 400));
 
         if (match) {
             // Если пользователь найден, записываем в таблицу Payments
