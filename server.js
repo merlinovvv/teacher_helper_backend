@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const approvedDomains = ['http://teacher-helper.pp.ua', 'https://teacher-helper.pp.ua', 'http://grades-helper.pp.ua', 'https://grades-helper.pp.ua']
+const approvedDomains = ['http://teacher-helper.pp.ua', 'https://teacher-helper.pp.ua', 'http://gradeshelper.com.ua', 'https://gradeshelper.com.ua']
 
 app.use(cors({
     origin: (origin, callback) => {
