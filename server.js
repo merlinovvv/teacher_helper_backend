@@ -7,9 +7,11 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const approvedDomains = ['http://teacher-helper.pp.ua', 'https://teacher-helper.pp.ua', 'http://grades-helper.pp.ua', 'https://grades-helper.pp.ua']
+
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || origin.startsWith('http://localhost') || origin === 'https://teacherhelper.pp.ua' || origin === 'http://teacherhelper.pp.ua') {
+        if (!origin || origin.startsWith('http://localhost') || approvedDomains.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));

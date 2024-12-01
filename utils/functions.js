@@ -6,11 +6,12 @@ function getSuccessResponse(data, message){
     }
 }
 
-function getErrorResponse(message){
+function getErrorResponse(message, status){
     return {
         success: false,
         response: {},
-        message
+        message,
+        status: status
     }
 }
 

@@ -11,6 +11,7 @@ const GradesGroupsReportsSchema = new mongoose.Schema({
         ref: 'Classes', // Ссылка на коллекцию Classes
         required: true
     },
+    reportType: { type: String, required: true },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User', // Ссылка на коллекцию User
