@@ -13,7 +13,7 @@ dist
 dist-ssr
 *.local
 .env
-uploads/*.xlsx
+uploads
 
 # Editor directories and files
 .vscode/*
