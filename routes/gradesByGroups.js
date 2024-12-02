@@ -146,8 +146,8 @@ router.post('/groups', authenticate, async (req, res) => {
             schoolClass,
         }));
 
-        // Получаем текущие записи из базы
-        const existingLinks = await Groups.find({}, 'subject schoolClass').lean();
+        // Получаем текущие записи пользователя из базы
+        const existingLinks = await Groups.find({ userId: req.user.id }, 'subject schoolClass').lean();
 
         // Находим записи, которые нужно удалить (есть в базе, но не пришли в body)
         const linksToDelete = existingLinks.filter(
@@ -161,6 +161,7 @@ router.post('/groups', authenticate, async (req, res) => {
         // Удаляем записи, которые отсутствуют в новом массиве
         if (linksToDelete.length > 0) {
             const deleteCriteria = linksToDelete.map(({ subject, schoolClass }) => ({
+                userId: req.user.id, // Ограничение по пользователю
                 subject,
                 schoolClass,
             }));
@@ -186,7 +187,7 @@ router.post('/groups', authenticate, async (req, res) => {
             // Обновляем или создаем запись
             const updatedGroup = await Groups.findOneAndUpdate(
                 { subject, schoolClass, userId: req.user.id },
-                { subject, schoolClass, groups },
+                { subject, schoolClass, groups, userId: req.user.id }, // Убедитесь, что userId сохраняется
                 { upsert: true, new: true }
             );
 
