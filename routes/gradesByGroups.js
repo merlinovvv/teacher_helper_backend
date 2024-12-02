@@ -217,6 +217,10 @@ router.post('/report', authenticate, upload.single('file'), async (req, res) => 
 
     const { type_report } = await User.findById(req.user.id);
 
+    if (!type_report) {
+        res.status(401).json(getErrorResponse(`Помилка! Встановіть тип звітів в налаштуваннях!`));
+    }
+
     const existingGradesGroupsReports = await GradesGroupsReports.findOne({ subject, schoolClass, userId, reportType: type_report });
 
     if (existingGradesGroupsReports) {
