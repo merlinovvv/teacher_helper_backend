@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const approvedDomains = ['http://teacher-helper.pp.ua', 'https://teacher-helper.pp.ua', 'http://gradeshelper.com.ua', 'https://gradeshelper.com.ua']
+const approvedDomains = ['http://gradeshelper.com.ua', 'https://gradeshelper.com.ua']
 
 app.use(cors({
     origin: (origin, callback) => {
@@ -32,6 +32,8 @@ app.listen(process.env.PORT, () => {
 
 const authRoutes = require('./routes/auth');
 const gradesByGroupsRoutes = require('./routes/gradesByGroups');
+const admin = require('./routes/admin');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/grades-groups', gradesByGroupsRoutes);
+app.use('/api/admin', admin);
